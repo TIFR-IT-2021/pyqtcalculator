@@ -576,6 +576,9 @@ class Ui_MainWindow(object):
         text = self.label.text()
         self.label.setText(text + "𝜋")
 
+    def func(self):
+        pass
+
     def action_fact(self):
         # appending label text
         text = self.label.text()
