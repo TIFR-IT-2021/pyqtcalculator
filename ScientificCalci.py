@@ -594,6 +594,7 @@ class Ui_MainWindow(object):
         text = self.label.text()
         print(text[:len(text)-1])
         self.label.setText(text[:len(text)-1])
+        print("s")
   
     
 if __name__ == "__main__":
