@@ -594,13 +594,8 @@ class Ui_MainWindow(object):
         text = self.label.text()
         print(text[:len(text)-1])
         self.label.setText(text[:len(text)-1])
-<<<<<<< HEAD
 
-    def new_func(self):
-        pass
-=======
-        print("s")
->>>>>>> a8f7a8cb463b3693f9977b6caf5b10431bd07c17
+    
   
     
 if __name__ == "__main__":
