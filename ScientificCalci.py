@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import math
-import numpy
+#import numpy
 
 class Ui_MainWindow(object):
 
@@ -266,23 +266,20 @@ class Ui_MainWindow(object):
         self.degButton.setObjectName("degButton") """
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setEnabled(False)
+        #self.menubar.setEnabled(False)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 958, 22))
-        self.menubar.setDefaultUp(False)
         self.menubar.setObjectName("menubar")
         self.menu_Calculator = QtWidgets.QMenu(self.menubar)
         self.menu_Calculator.setObjectName("menu_Calculator")
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+
+        """self.menu_Calculator.addSeparator()
         self.menu_Calculator.addSeparator()
         self.menu_Calculator.addSeparator()
         self.menu_Calculator.addSeparator()
         self.menu_Calculator.addSeparator()
         self.menu_Calculator.addSeparator()
-        self.menu_Calculator.addSeparator()
-        self.menubar.addAction(self.menu_Calculator.menuAction())
+        self.menubar.addAction(self.menu_Calculator.menuAction())"""
         self.arr = []
         self.ans=""
         self.retranslateUi(MainWindow)
@@ -327,7 +324,7 @@ class Ui_MainWindow(object):
         self.subButton.setText(_translate("MainWindow", "-"))
         self.plusButton.setText(_translate("MainWindow", "+"))
         #self.degButton.setText(_translate("MainWindow", "DEG"))
-        self.menu_Calculator.setTitle(_translate("MainWindow", " Calculator"))
+        self.menu_Calculator.setTitle(_translate("MainWindow", " History"))
 
         self.Button0.clicked.connect(self.action0)
         self.Button1.clicked.connect(self.action1)
@@ -379,6 +376,12 @@ class Ui_MainWindow(object):
             ans = str(ans)
             self.ans = ans
             self.label.setText(str(ans))
+            self.actionOper = QtWidgets.QAction(MainWindow)
+            self.menu_Calculator.addAction(self.actionOper)
+            self.menu_Calculator.addSeparator()
+            self.menubar.addAction(self.menu_Calculator.menuAction())
+            eq = equation+" = "+str(ans)
+            self.actionOper.setText(eq)
   
         except:
             # setting text to the label
