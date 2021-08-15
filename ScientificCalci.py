@@ -381,11 +381,16 @@ class Ui_MainWindow(object):
             self.menu_Calculator.addSeparator()
             self.menubar.addAction(self.menu_Calculator.menuAction())
             eq = equation+" = "+str(ans)
+            self.menubar.triggered.connect(self.menu_action)
             self.actionOper.setText(eq)
   
         except:
             # setting text to the label
             self.label.setText("Wrong Input")
+    
+    def menu_action(self,action):
+        eq1 = action.text()
+        self.label.setText(action.text().split(" = ")[0])
   
     def action_plus(self):
         # appending label text
@@ -571,7 +576,7 @@ class Ui_MainWindow(object):
         # appending label text
         self.value = self.value + self.ans
         text = self.label.text()
-        self.label.setText(text + "Ans")
+        self.label.setText(text + str(self.ans))
 
     def action_pi(self):
         # appending label text
