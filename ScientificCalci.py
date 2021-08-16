@@ -425,7 +425,10 @@ class Ui_MainWindow(object):
     def action_minus(self):
         # appending label text
         text = self.label.text()
-        if text[-3:] == " + ":
+        if text=="":
+            text = ""
+            self.value = ""
+        elif text[-3:] == " + ":
             text = text[:-3]
             self.value = self.value[:-3]  # for replacing the operator
         elif text[-1] == ".":
