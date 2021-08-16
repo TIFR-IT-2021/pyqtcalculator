@@ -459,8 +459,7 @@ class Ui_MainWindow(object):
         self.value = self.value + " * "
         self.label.setText(text + " x ")
         self.eqpress = False
-        
-  
+
     def action_point(self):
         # appending label text
         self.value = self.value + "."
@@ -621,7 +620,7 @@ class Ui_MainWindow(object):
         # appending label text
         self.value = self.value + "**2"
         text = self.label.text()
-        self.label.setText(text + "^2 ")
+        self.label.setText(text + "^ 2")
 
     def action_log(self):
         # appending label text
@@ -810,9 +809,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    """MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)"""
     MainWindow = MainWindow()
     MainWindow.show()
     sys.exit(app.exec_())
