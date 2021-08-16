@@ -1,7 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 import math
-import numpy
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
 
@@ -403,7 +402,8 @@ class Ui_MainWindow(object):
         self.value = self.value.replace("sin(", "math.sin(")
         self.value = self.value.replace("cos(", "math.cos(")
         self.value = self.value.replace("tan(", "math.tan(")
-        self.value = self.value.replace("log(", "math.log(")
+        self.value = self.value.replace("log(", "math.log10(")
+        self.value = self.value.replace("ln(", "math.log(")
         self.value = self.value.replace("√(", "math.sqrt(")
         self.value = self.value.replace("e", "2.718281828459045")
         self.value = self.value.replace("𝜋", "3.14159265359")
@@ -625,13 +625,13 @@ class Ui_MainWindow(object):
 
     def action_log(self):
         # appending label text
-        self.value = self.value + "math.log("
+        self.value = self.value + "math.log10("
         text = self.label.text()
         self.label.setText(text + "log(")
 
     def action_ln(self):
         # appending label text
-        self.value = self.value + "numpy.log("
+        self.value = self.value + "math.log("
         text = self.label.text()
         self.label.setText(text + "ln(")
 
@@ -699,12 +699,15 @@ class Ui_MainWindow(object):
         # clearing a single digit
         equ = self.value
         text = self.label.text()
-        if text[-4:]=="sin(" or text[-4:]=="cos(" or text[-4:]=="tan(" or text[-4:]=="log(":
+        if text[-4:]=="sin(" or text[-4:]=="cos(" or text[-4:]=="tan(":
             self.label.setText(text[:-4])
             self.value = equ[:-9]
+        elif text[-4:]=="log(":
+            self.label.setText(text[:-4])
+            self.value = equ[:-11]
         elif text[-3:]=="ln(":
             self.label.setText(text[:-3])
-            self.value = equ[:-10]
+            self.value = equ[:-9]
         elif equ[-2:]=="**":
             self.label.setText(text[:-2])
             self.value = equ[:-2]
