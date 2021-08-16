@@ -1,10 +1,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
 import math
-#import numpy
+import numpy
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
+
 
 class Ui_MainWindow(object):
+    eqpress = False
 
-    
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -369,52 +372,93 @@ class Ui_MainWindow(object):
         # get the label text
         equation = self.label.text()
         eq = self.value
-  
-        try:
-            # getting the ans
-            ans = eval(eq)
-            ans = str(ans)
-            self.ans = ans
-            self.label.setText(str(ans))
-            self.actionOper = QtWidgets.QAction(MainWindow)
-            self.menu_Calculator.addAction(self.actionOper)
-            self.menu_Calculator.addSeparator()
-            self.menubar.addAction(self.menu_Calculator.menuAction())
-            eq = equation+" = "+str(ans)
-            self.menubar.triggered.connect(self.menu_action)
-            self.actionOper.setText(eq)
-  
-        except:
-            # setting text to the label
-            self.label.setText("Wrong Input")
-    
+        if equation!="":
+            try:
+                # getting the ans
+                ans = eval(eq)
+                self.ans = ans
+                self.value = str(ans)
+                self.label.setText(str(ans))
+                self.actionOper = QtWidgets.QAction(MainWindow)
+                self.menu_Calculator.addAction(self.actionOper)
+                self.menu_Calculator.addSeparator()
+                self.menubar.addAction(self.menu_Calculator.menuAction())
+                eq1 = equation+" = "+str(ans)
+                self.menubar.triggered.connect(self.menu_action)
+                self.actionOper.setText(eq1)
+                self.eqpress = True
+            except:
+                # setting text to the label
+                msg = QMessageBox()
+                msg.setWindowTitle("Scientific Calculator")
+                msg.setText("Wrong Input")
+                msg.exec_()
+                self.label.setText("")
+
     def menu_action(self,action):
-        eq1 = action.text()
         self.label.setText(action.text().split(" = ")[0])
+        self.value = action.text().split(" = ")[0].replace("x", "*")
+        self.value = self.value.replace("÷", "/")
+        self.value = self.value.replace("^ ", "**")
+        self.value = self.value.replace("sin(", "math.sin(")
+        self.value = self.value.replace("cos(", "math.cos(")
+        self.value = self.value.replace("tan(", "math.tan(")
+        self.value = self.value.replace("log(", "math.log(")
+        self.value = self.value.replace("√(", "math.sqrt(")
+        self.value = self.value.replace("e", "2.718281828459045")
+        self.value = self.value.replace("𝜋", "3.14159265359")
   
     def action_plus(self):
         # appending label text
-        self.value = self.value + "+"
         text = self.label.text()
+        if text[-3:] == " - " or text[-3:] == " ÷ " or text[-3:] == " x ":
+            text = text[:-3]
+            self.value = self.value[:-3]# for replacing the operator
+        elif text[-1] == ".":
+            text = text[:-1]
+            self.value = self.value[:-1]
+        self.value = self.value + " + "
         self.label.setText(text + " + ")
+        self.eqpress = False
   
     def action_minus(self):
         # appending label text
-        self.value = self.value + "-"
         text = self.label.text()
+        if text[-3:] == " + ":
+            text = text[:-3]
+            self.value = self.value[:-3]  # for replacing the operator
+        elif text[-1] == ".":
+            text = text[:-1]
+            self.value = self.value[:-1]
+        self.value = self.value + " - "
         self.label.setText(text + " - ")
+        self.eqpress = False
   
     def action_div(self):
         # appending label text
-        self.value = self.value + "/"
         text = self.label.text()
+        if text[-3:] == " - " or text[-3:] == " + " or text[-3:] == " x ":
+            text = text[:-3]
+            self.value = self.value[:-3]  # for replacing the operator
+        elif text[-1] == ".":
+            text = text[:-1]
+            self.value = self.value[:-1]
+        self.value = self.value + " / "
         self.label.setText(text + " ÷ ")
+        self.eqpress = False
   
     def action_mul(self):
         # appending label text
-        self.value = self.value + "*"
         text = self.label.text()
+        if text[-3:] == " - " or text[-3:] == " + " or text[-3:] == " ÷ ":
+            text = text[:-3]
+            self.value = self.value[:-3]  # for replacing the operator
+        elif text[-1] == ".":
+            text = text[:-1]
+            self.value = self.value[:-1]
+        self.value = self.value + " * "
         self.label.setText(text + " x ")
+        self.eqpress = False
         
   
     def action_point(self):
@@ -425,68 +469,129 @@ class Ui_MainWindow(object):
   
     def action0(self):
         # appending label text
-        self.value = self.value + "0"
         text = self.label.text()
+        if text == "" or self.eqpress:
+            text = ""
+            self.value = ""
+        elif text[-3:] == "+ 0" or text[-3:] == "- 0" or text[-3:] == "x 0" or text[-3:] == "÷ 0":
+            text = text[:-1]
+        self.value = self.value + "0"
         self.label.setText(text + "0")
+        self.eqpress = False
   
     def action1(self):
         # appending label text
-        self.value = self.value + "1"
         text = self.label.text()
+        if text == "" or self.eqpress:
+            text = ""
+            self.value = ""
+        elif text[-3:] == "+ 0" or text[-3:] == "- 0" or text[-3:] == "x 0" or text[-3:] == "÷ 0":
+            text = text[:-1]
+        self.value = self.value + "1"
         self.label.setText(text + "1")
+        self.eqpress = False
   
     def action2(self):
         # appending label text
-        self.value = self.value + "2"
         text = self.label.text()
+        if text == "" or self.eqpress:
+            text = ""
+            self.value = ""
+        elif text[-3:] == "+ 0" or text[-3:] == "- 0" or text[-3:] == "x 0" or text[-3:] == "÷ 0":
+            text = text[:-1]
+        self.value = self.value + "2"
         self.label.setText(text + "2")
+        self.eqpress = False
   
     def action3(self):
         # appending label text
-        self.value = self.value + "3"
         text = self.label.text()
+        if text == "" or self.eqpress:
+            text = ""
+            self.value = ""
+        elif text[-3:] == "+ 0" or text[-3:] == "- 0" or text[-3:] == "x 0" or text[-3:] == "÷ 0":
+            text = text[:-1]
+        self.value = self.value + "3"
         self.label.setText(text + "3")
+        self.eqpress = False
   
     def action4(self):
         # appending label text
         text = self.label.text()
+        if text == "" or self.eqpress:
+            text = ""
+            self.value = ""
+        elif text[-3:] == "+ 0" or text[-3:] == "- 0" or text[-3:] == "x 0" or text[-3:] == "÷ 0":
+            text = text[:-1]
         self.value = self.value + "4"
         self.label.setText(text + "4")
+        self.eqpress = False
   
     def action5(self):
         # appending label text
-        self.value = self.value + "5"
         text = self.label.text()
+        if text == "" or self.eqpress:
+            text = ""
+            self.value = ""
+        elif text[-3:] == "+ 0" or text[-3:] == "- 0" or text[-3:] == "x 0" or text[-3:] == "÷ 0":
+            text = text[:-1]
+        self.value = self.value + "5"
         self.label.setText(text + "5")
+        self.eqpress = False
   
     def action6(self):
         # appending label text
-        self.value = self.value + "6"
         text = self.label.text()
+        if text == "" or self.eqpress:
+            text = ""
+            self.value = ""
+        elif text[-3:] == "+ 0" or text[-3:] == "- 0" or text[-3:] == "x 0" or text[-3:] == "÷ 0":
+            text = text[:-1]
+        self.value = self.value + "6"
         self.label.setText(text + "6")
+        self.eqpress = False
   
     def action7(self):
         # appending label text
-        self.value = self.value + "7"
         text = self.label.text()
+        if text == "" or self.eqpress:
+            text = ""
+            self.value = ""
+        elif text[-3:] == "+ 0" or text[-3:] == "- 0" or text[-3:] == "x 0" or text[-3:] == "÷ 0":
+            text = text[:-1]
+        self.value = self.value + "7"
         self.label.setText(text + "7")
+        self.eqpress = False
   
     def action8(self):
         # appending label text
-        self.value = self.value + "8"
         text = self.label.text()
+        if text == "" or self.eqpress:
+            text = ""
+            self.value = ""
+        elif text[-3:] == "+ 0" or text[-3:] == "- 0" or text[-3:] == "x 0" or text[-3:] == "÷ 0":
+            text = text[:-1]
+        self.value = self.value + "8"
         self.label.setText(text + "8")
+        self.eqpress = False
   
     def action9(self):
         # appending label text
-        self.value = self.value + "9"
         text = self.label.text()
+        if text == "" or self.eqpress:
+            text = ""
+            self.value = ""
+        elif text[-3:] == "+ 0" or text[-3:] == "- 0" or text[-3:] == "x 0" or text[-3:] == "÷ 0":
+            text = text[:-1]
+        self.value = self.value + "9"
         self.label.setText(text + "9")
+        self.eqpress = False
   
     def action_clear(self):
         # clearing the label text
         self.label.setText("")
         self.value = ""
+        self.eqpress = False
 
     def action_openbrac(self):
         # appending label text
@@ -504,19 +609,19 @@ class Ui_MainWindow(object):
         # appending label text
         text = self.label.text()
         self.value = self.value + "**"
-        self.label.setText(text + "^")
+        self.label.setText(text + "^ ")
 
     def action_inverse(self):
         # appending label text
         self.value = self.value + "**-1"
         text = self.label.text()
-        self.label.setText(text + "^-1")
+        self.label.setText(text + "^ -1")
 
     def action_square(self):
         # appending label text
         self.value = self.value + "**2"
         text = self.label.text()
-        self.label.setText(text + "^2")
+        self.label.setText(text + "^2 ")
 
     def action_log(self):
         # appending label text
@@ -556,7 +661,7 @@ class Ui_MainWindow(object):
 
     def action_mod(self):
         # appending label text
-        self.value = self.value + "%"
+        self.value = self.value + " % "
         text = self.label.text()
         self.label.setText(text + " % ")
 
@@ -574,15 +679,9 @@ class Ui_MainWindow(object):
 
     def action_ans(self):
         # appending label text
-        self.value = self.value + self.ans
+        self.value = self.value + str(self.ans)
         text = self.label.text()
         self.label.setText(text + str(self.ans))
-
-    def action_pi(self):
-        # appending label text
-        self.value = self.value + "3.14159265359"
-        text = self.label.text()
-        self.label.setText(text + "𝜋")
 
     def action_fact(self):
         # appending label text
@@ -598,20 +697,120 @@ class Ui_MainWindow(object):
 
     def action_del(self):
         # clearing a single digit
-        self.value = (self.value[:len(self.value)-1])
+        equ = self.value
         text = self.label.text()
-        print(text[:len(text)-1])
-        self.label.setText(text[:len(text)-1])
+        if text[-4:]=="sin(" or text[-4:]=="cos(" or text[-4:]=="tan(" or text[-4:]=="log(":
+            self.label.setText(text[:-4])
+            self.value = equ[:-9]
+        elif text[-3:]=="ln(":
+            self.label.setText(text[:-3])
+            self.value = equ[:-10]
+        elif equ[-2:]=="**":
+            self.label.setText(text[:-2])
+            self.value = equ[:-2]
+        elif equ[-3:]=="**2":
+            self.label.setText(text[:-3])
+            self.value = equ[:-3]
+        elif equ[-4:]=="**-1":
+            self.label.setText(text[:-4])
+            self.value = equ[:-4]
+        elif text[-2:]=="√(":
+            self.label.setText(text[:-2])
+            self.value = equ[:-10]
+        elif text[-1:]=="𝜋":
+            self.label.setText(text[:-1])
+            self.value = equ[:-13]
+        elif text[-1:]=="e":
+            self.label.setText(text[:-1])
+            self.value = equ[:-17]
+        else:
+            self.value = (self.value[:len(self.value)-1])
+            self.label.setText(text[:len(text)-1])
+        #print(text[:len(text) - 1])
 
-    
-  
+
+class MainWindow(QMainWindow, Ui_MainWindow):
+    def __init__(self, parent=None):
+        QMainWindow.__init__(self, parent=parent)
+        self.setupUi(self)
+
+    def keyPressEvent(self, e):
+        if e.key() == Qt.Key_0:
+            self.action0()
+
+        elif e.key() == Qt.Key_1:
+            self.action1()
+
+        elif e.key() == Qt.Key_2:
+            self.action2()
+
+        elif e.key() == Qt.Key_3:
+            self.action3()
+
+        elif e.key() == Qt.Key_4:
+            self.action4()
+
+        elif e.key() == Qt.Key_5:
+            self.action5()
+
+        elif e.key() == Qt.Key_6:
+            self.action6()
+
+        elif e.key() == Qt.Key_7:
+            self.action7()
+
+        elif e.key() == Qt.Key_8:
+            self.action8()
+
+        elif e.key() == Qt.Key_9:
+            self.action9()
+
+        elif e.key() == Qt.Key_Enter or e.key() == Qt.Key_Equal or e.key() == Qt.Key_Return:
+            self.action_equal()
+
+        elif e.key() == Qt.Key_Plus:
+            self.action_plus()
+
+        elif e.key() == Qt.Key_Minus:
+            self.action_minus()
+
+        elif e.key() == Qt.Key_Asterisk:
+            self.action_mul()
+
+        elif e.key() == Qt.Key_Slash:
+            self.action_div()
+
+        elif e.key() == Qt.Key_Backspace:
+            self.action_del()
+
+        elif e.key() == Qt.Key_Delete:
+            self.action_clear()
+
+        elif e.key() == Qt.Key_Period:
+            self.action_point()
+
+        elif e.key() == Qt.Key_ParenLeft:
+            self.action_openbrac()
+
+        elif e.key() == Qt.Key_ParenRight:
+            self.action_closebrac()
+
+        elif e.key() == Qt.Key_Percent:
+            self.action_mod()
+
+        elif e.key() == Qt.Key_AsciiCircum:
+            self.action_raise()
+
+        elif e.key() == Qt.Key_Exclam:
+            self.action_fact()
     
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
+    """MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui.setupUi(MainWindow)"""
+    MainWindow = MainWindow()
     MainWindow.show()
     sys.exit(app.exec_())
 
