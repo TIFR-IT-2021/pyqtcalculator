@@ -407,6 +407,7 @@ class Ui_MainWindow(object):
         self.value = self.value.replace("√(", "math.sqrt(")
         self.value = self.value.replace("e", "2.718281828459045")
         self.value = self.value.replace("𝜋", "3.14159265359")
+        self.eqpress = False
   
     def action_plus(self):
         # appending label text
